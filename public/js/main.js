@@ -3,7 +3,7 @@ const chatMessages = document.querySelector('.chat-messages');
 const roomName = document.getElementById('room-name');
 const userList = document.getElementById('users');
 
-// Her får jeg vores Username og Room fra vores URL den finder.
+// Her får jeg vores Username og Room fra vores URL som den finder.
 const { username, room } = Qs.parse(location.search, {
   ignoreQueryPrefix: true,
 });
