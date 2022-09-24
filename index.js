@@ -15,20 +15,20 @@ const app = express();
 const server = http.createServer(app);
 const io = socketio(server);
 
-// Set public directory
+// Her laver jeg mappen Public
 app.use(express.static(path.join(__dirname, 'public')));
 
-// this block will run when the client connects
+// Denne kode kører når klinter connecter
 io.on('connection', socket => {
   socket.on('joinRoom', ({ username, room }) => {
     const user = newUser(socket.id, username, room);
 
     socket.join(user.room);
 
-    // General welcome
+    // Når man joiner et rum kommer denne besked i chatten af en "bot"
     socket.emit('message', formatMessage("School Bot", 'Messages are limited to this classroom chat! '));
 
-    // Broadcast everytime users connects
+    // Hver gang en ny joiner, får de en besked som en "bot" skriver at de er joinet
     socket.broadcast
       .to(user.room)
       .emit(
@@ -36,21 +36,21 @@ io.on('connection', socket => {
         formatMessage("School Bot", `${user.username} has joined the room`)
       );
 
-    // Current active users and room name
+    // Der hvor antallet af online i rummet og rummets navn
     io.to(user.room).emit('roomUsers', {
       room: user.room,
       users: getIndividualRoomUsers(user.room)
     });
   });
 
-  // Listen for client message
+  // Lytter efter en besked fra klinten sender
   socket.on('chatMessage', msg => {
     const user = getActiveUser(socket.id);
 
     io.to(user.room).emit('message', formatMessage(user.username, msg));
   });
 
-  // Runs when client disconnects
+  // Koden når en klient går ud af rummet
   socket.on('disconnect', () => {
     const user = exitRoom(socket.id);
 
@@ -60,7 +60,7 @@ io.on('connection', socket => {
         formatMessage("WebCage", `${user.username} has left the room`)
       );
 
-      // Current active users and room name
+      // Liste af online og rummets navn lige nu
       io.to(user.room).emit('roomUsers', {
         room: user.room,
         users: getIndividualRoomUsers(user.room)
@@ -69,6 +69,6 @@ io.on('connection', socket => {
   });
 });
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 2665;
 
 server.listen(PORT, () => console.log(`Server running on port ${PORT}`));
