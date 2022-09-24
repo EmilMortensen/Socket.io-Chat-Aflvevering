@@ -15,7 +15,7 @@ const app = express();
 const server = http.createServer(app);
 const io = socketio(server);
 
-// Her laver jeg mappen Public
+// Her laver jeg vejen til mappen Public
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Denne kode kører når klinter connecter
